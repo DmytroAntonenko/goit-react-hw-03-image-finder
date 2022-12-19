@@ -1,3 +1,5 @@
+import { Component } from 'react';
+
 export const App = () => {
   return (
     <div
@@ -14,3 +16,5 @@ export const App = () => {
     </div>
   );
 };
+
+export default App;
