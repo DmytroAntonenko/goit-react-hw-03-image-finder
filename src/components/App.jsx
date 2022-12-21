@@ -76,9 +76,9 @@ class App extends Component {
   };
 
   render() {
-    const vewLoadMoreButton = this.state.images.length > 0 && this.state.page < this.state.totalPages && !this.state.isloadMore;
-  return (
-    <div
+    // const vewLoadMoreButton = this.state.images.length > 0 && this.state.page < this.state.totalPages && !this.state.isloadMore;
+    return (
+      <div
       // style={{
       //   height: '100vh',
       //   display: 'flex',
@@ -87,15 +87,15 @@ class App extends Component {
       //   fontSize: 40,
       //   color: '#010101'
       // }}
-    >
-      <SearchBar onSubmit={this.handleSearchBar}/>
-      <ImageGallery images={this.state.images} onModal={this.handleOpenModal} />
-      <ToastContainer autoClose={2000} />
-      {this.state.isLoading && <Loader />}
-      {vewLoadMoreButton && <Button onClick={this.loadMore} />}
-    </div>
-  );
-    }
+      >
+        <SearchBar onSubmit={this.handleSearchBar}/>
+        <ImageGallery images={this.state.images} onModal={this.handleOpenModal} />
+        <ToastContainer autoClose={2000} />
+        {this.state.isLoading && <Loader />}
+        {this.state.isloadMore && !this.state.error &&  <Button onClick={this.loadMore} />}
+      </div>
+    );
+  }
 };
 
 export default App;
