@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { toast } from 'react-toastify';
-
+import { BiSearchAlt } from 'react-icons/bi';
 import ProtoTypes from 'prop-types';
 
 class SearchBar extends Component {
@@ -26,7 +26,7 @@ class SearchBar extends Component {
       <header className="Searchbar">
         <form className="SearchForm" onSubmit={this.handleSubmit}>
           <button type="submit" className="SearchForm-button">
-            <span className="SearchForm-button-label">Search</span>
+          <BiSearchAlt size={32} />
           </button>
 
           <input
