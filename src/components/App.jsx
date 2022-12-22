@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import getImages from './services/api';
@@ -8,6 +8,8 @@ import SearchBar from './SearchBar';
 import ImageGallery from './ImageGallery';
 import Button from './Button';
 import Loader from './Loader';
+import Modal from './Modal';
+
 
 class App extends Component {
   state = {
@@ -18,6 +20,7 @@ class App extends Component {
     isLoading: false,
     isloadMore: false,
     error: null,
+    currentImage: false,
   }
 
   handleSearchBar = searchName => {
@@ -29,9 +32,10 @@ class App extends Component {
   };
 
   async componentDidUpdate(_, prevState) {
+    const { page, name } = this.state;
     if (
-      prevState.name !== this.state.name ||
-      prevState.page !== this.state.page
+      prevState.name !== name ||
+      prevState.page !== page
     ) {
       try {
         this.setState({
@@ -40,8 +44,8 @@ class App extends Component {
           isloadMore: true,
         });
         const searchImages = await getImages(
-          this.state.name,
-          this.state.page
+          name,
+          page
 				);
 				const newImages = searchImages.map(searchImage=>({ id: searchImage.id, tags: searchImage.tags, smallImg: searchImage.webformatURL, bigImg: searchImage.largeImageURL }));
 				this.setState(prevState => ({
@@ -50,15 +54,16 @@ class App extends Component {
         if (searchImages.length !== 12) {
           this.setState.apply({ isloadMore: false });
         }
+        
       } catch {
-        this.setState({
-          error: 'Щось пішло не так, спробуйте ще раз!',
-        });
+          this.setState({ error: 'error'});
+          toast.warning("Нічого не знайдено. Введіть коректне значення!");
+        
       } finally {
         this.setState({ isLoading: false });
       }
     }
-    if (this.state.page > 1) {
+    if (page > 1) {
       window.scrollTo({
         top: document.documentElement.scrollHeight,
         behavior: 'smooth',
@@ -67,7 +72,7 @@ class App extends Component {
   }
 
 
-  loadMore = () => {
+  handleLoadMore = () => {
     this.setState(prevState => ({ page: prevState.page + 1 }));
   };
 
@@ -75,24 +80,23 @@ class App extends Component {
     this.setState({ currentImage: image });
   };
 
+  handleCloseModal = () => {
+    this.setState({ currentImage: null });
+  };
+
   render() {
-    // const vewLoadMoreButton = this.state.images.length > 0 && this.state.page < this.state.totalPages && !this.state.isloadMore;
+    const { images, isloadMore, isLoading, error, currentImage, tags } = this.state;
+    
     return (
-      <div
-      // style={{
-      //   height: '100vh',
-      //   display: 'flex',
-      //   justifyContent: 'center',
-      //   alignItems: 'center',
-      //   fontSize: 40,
-      //   color: '#010101'
-      // }}
-      >
+      <div>
         <SearchBar onSubmit={this.handleSearchBar}/>
-        <ImageGallery images={this.state.images} onModal={this.handleOpenModal} />
+        <ImageGallery images={images} onModal={this.handleOpenModal} />
+        {currentImage && (
+          <Modal image={currentImage} imageTags={tags} offModal={this.handleCloseModal} />
+        )}
         <ToastContainer autoClose={2000} />
-        {this.state.isLoading && <Loader />}
-        {this.state.isloadMore && !this.state.error &&  <Button onClick={this.loadMore} />}
+        {isLoading && <Loader />}
+        {isloadMore && !error && !isLoading && <Button onClick={this.handleLoadMore} />}
       </div>
     );
   }

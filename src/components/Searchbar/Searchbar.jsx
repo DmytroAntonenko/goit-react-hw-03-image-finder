@@ -7,6 +7,7 @@ class SearchBar extends Component {
   state = {
     search: '',
   };
+  
 
   handleChange = event => {
     this.setState({ search: event.currentTarget.value });
@@ -14,9 +15,11 @@ class SearchBar extends Component {
   handleSubmit = event => {
     event.preventDefault();
     if(this.state.search.trim() === '') {
+      
       toast.warning("Введіть пошук");
       return;
     }
+
     this.props.onSubmit(this.state.search);
     this.setState({ search: '' });
   };
