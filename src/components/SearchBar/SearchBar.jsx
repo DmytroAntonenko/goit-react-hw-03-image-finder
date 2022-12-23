@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { BiSearchAlt } from 'react-icons/bi';
 import ProtoTypes from 'prop-types';
 
